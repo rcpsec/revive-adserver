@@ -3696,7 +3696,8 @@ $output = array(
 'bannerContent' => $row['bannerContent'],
 'clickwindow' => $row['clickwindow'],
 'aRow' => $row,
-'context' => _adSelectBuildContext($row, $context)
+'context' => _adSelectBuildContext($row, $context),
+'iframeFriendly' => (bool)$row['iframe_friendly'],
 );
 $row += array(
 'block_ad' => 0,

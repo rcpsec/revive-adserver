@@ -3696,7 +3696,8 @@ $output = array(
 'bannerContent' => $row['bannerContent'],
 'clickwindow' => $row['clickwindow'],
 'aRow' => $row,
-'context' => _adSelectBuildContext($row, $context)
+'context' => _adSelectBuildContext($row, $context),
+'iframeFriendly' => (bool)$row['iframe_friendly'],
 );
 $row += array(
 'block_ad' => 0,
@@ -4323,7 +4324,12 @@ $zonename = $prefix.$id;
 unset($GLOBALS['_MAX']['deliveryData']);
 $what = 'zone:'.$thisZoneid;
 $output = MAX_adSelect($what, $clientid, $target, $source, $withtext, $charset, $context, true, $ct0, $GLOBALS['loc'], $GLOBALS['referer']);
-$spc_output[$zonename] = $output;
+$spc_output[$zonename] = array(
+'html' => $output['html'],
+'width' => isset($output['width']) ? $output['width'] : 0,
+'height' => isset($output['height']) ? $output['height'] : 0,
+'iframeFriendly' => isset($output['iframeFriendly']) ? $output['iframeFriendly'] : false,
+);
 if (!empty($block) && !empty($output['bannerid'])) {
 $output['context'][] = array('!=' => 'bannerid:' . $output['bannerid']);
 }
