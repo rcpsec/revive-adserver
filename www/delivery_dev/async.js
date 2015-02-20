@@ -9,12 +9,16 @@
 
             start: function () {
                 var callback = function () {
-                    if (!rv.done) {
-                        doc.removeEventListener("DOMContentLoaded", callback, false);
-                        win.removeEventListener("load", callback, false);
+                    try {
+                        if (!rv.done) {
+                            doc.removeEventListener("DOMContentLoaded", callback, false);
+                            win.removeEventListener("load", callback, false);
 
-                        rv.done= true;
-                        rv.apply(rv.detect());
+                            rv.done= true;
+                                rv.apply(rv.detect());
+                        }
+                    } catch (e) {
+                        console.log(e);
                     }
                 };
 
@@ -170,15 +174,42 @@
                         var ins = doc.getElementById(id);
 
                         if (ins) {
-                            var i = rv.createFrame(d);
-                            ins.appendChild(i);
-                            rv.loadFrame(i, d.html);
+                            var newIns = doc.createElement('INS');
+
+                            if (d.iframeFriendly) {
+                                var i = rv.createFrame(d);
+                                newIns.appendChild(i);
+                                ins.parentNode.replaceChild(newIns, ins);
+                                rv.loadFrame(i, d.html);
+                            } else {
+                                newIns.innerHTML = d.html;
+                                var scripts = newIns.getElementsByTagName('SCRIPT');
+
+                                for (var i = 0; i < scripts.length; i++) {
+                                    var s = document.createElement('SCRIPT');
+                                    var a = scripts[i].attributes;
+                                    for (var j = 0; j < a.length; j++) {
+                                        s[a[j].nodeName] = a[j].nodeValue
+                                    }
+                                    if (scripts[i].innerHTML) {
+                                        s.text = scripts[i].innerHTML;
+                                    }
+
+                                    newIns.replaceChild(s, scripts[i]);
+                                }
+
+                                ins.parentNode.replaceChild(newIns, ins);
+                            }
                         }
                     }
                 }
             },
         };
 
-        rv.start();
+        try {
+            rv.start();
+        } catch (e) {
+            console.log(e);
+        }
     }
 })(document, window);

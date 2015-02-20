@@ -48,7 +48,12 @@ if(!empty($zones)) {
         // Get the banner
         $output = MAX_adSelect($what, $clientid, $target, $source, $withtext, $charset, $context, true, $ct0, $GLOBALS['loc'], $GLOBALS['referer']);
 
-        $spc_output[$zonename] = $output;
+        $spc_output[$zonename] = array(
+            'html' => $output['html'],
+            'width' => isset($output['width']) ? $output['width'] : 0,
+            'height' => isset($output['height']) ? $output['height'] : 0,
+            'iframeFriendly' => isset($output['iframeFriendly']) ? $output['iframeFriendly'] : false,
+        );
 
         // Block this banner for next invocation
         if (!empty($block) && !empty($output['bannerid'])) {
