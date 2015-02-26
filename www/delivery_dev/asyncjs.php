@@ -13,7 +13,8 @@
 // Require the initialisation file
 require_once '../../init-delivery.php';
 
-$etag = md5("{$conf['webpath']['deliverySSL']}*{$conf['webpath']['deliverySSL']}");
+$etag = md5("{$conf['webpath']['delivery']}*{$conf['webpath']['deliverySSL']}");
+$product = $GLOBALS['_MAX']['CONF']['var']['product'];
 
 // The browser is allowed to cache this
 header("Content-Type: text/javascript");

@@ -6,6 +6,7 @@
     if (!win.reviveAsync.hasOwnProperty(ID)) {
         var rv = win.reviveAsync[ID] = {
             id: Object.keys(win.reviveAsync).length,
+            name: "<?php echo $product; ?>",
 
             start: function () {
                 var callback = function () {
@@ -96,24 +97,26 @@
             },
 
             detect: function () {
-                var attrs = {"block-campaign": "blockcampaign", "block-banner": "block"};
-                var elements = doc.querySelectorAll("ins[data-revive-id='" + ID + "']");
+                var elements = doc.querySelectorAll("ins[data-" + rv.name + "-id='" + ID + "']");
                 var data = {
                     zones: [],
-                    prefix: "revive-" + rv.id + "-"
+                    prefix: rv.name + "-" + rv.id + "-"
                 };
 
                 for (var idx = 0; idx < elements.length; idx++) {
                     var i = elements[idx];
 
-                    if (i.hasAttribute("data-revive-zone-id")) {
-                        data.zones[idx] = i.getAttribute("data-revive-zone-id");
-                        i.id = data.prefix + idx;
+                    if (i.hasAttribute("data-" + rv.name + "-zoneid")) {
+                        var regex = new RegExp("^data-" + rv.name + "-(.*)$"),
+                            m;
 
-                        for (var a in attrs) {
-                            if (attrs.hasOwnProperty(a)) {
-                                if (i.hasAttribute("data-revive-" + a) && !data[a]) {
-                                    data[attrs[a]] = i.getAttribute("data-revive-" + a);
+                        for (var j = 0; j < i.attributes.length; j++) {
+                            if (m = i.attributes[j].name.match(regex)) {
+                                if (m[1] == 'zoneid') {
+                                    data.zones[idx] = i.attributes[j].value;
+                                    i.id = data.prefix + idx;
+                                } else if (m[1] != 'id') {
+                                    data[m[1]] = i.attributes[j].value;
                                 }
                             }
                         }
