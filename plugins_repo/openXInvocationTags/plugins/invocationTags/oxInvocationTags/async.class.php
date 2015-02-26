@@ -127,8 +127,8 @@ class Plugins_InvocationTags_OxInvocationTags_async extends Plugins_InvocationTa
         $mi->parameters['id'] = 'id='.md5("{$conf['webpath']['delivery']}*{$conf['webpath']['deliverySSL']}");
 
         // Remap as tag attributes with data-revive prefix
-        $mi->parameters = array_map(function ($v) {
-            return preg_replace('#^(.*)=(.*)$#', 'data-revive-$1="$2"', $v);
+        $mi->parameters = array_map(function ($v) use ($conf) {
+            return preg_replace('#^(.*)=(.*)$#', 'data-'.$conf['var']['product'].'-$1="$2"', $v);
         }, $mi->parameters);
 
         $buffer .= '<ins '.join(' ', $mi->parameters).'></ins>'.PHP_EOL;
